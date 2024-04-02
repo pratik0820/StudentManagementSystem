@@ -6,6 +6,7 @@ import com.register.demo.entity.Students;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,5 +41,18 @@ public class StudentService {
         } else {
             throw new IllegalArgumentException("student with id " + id + "not found");
         }
+    }
+
+    public List<Students> getAllStudents() {
+        return studentRepository.findAll();
+    }
+
+
+    public Optional<Students> getStudentById(long id) {
+        return studentRepository.findById(id);
+    }
+
+    public void deleteStudent(long id) {
+        studentRepository.deleteById(id);
     }
 }

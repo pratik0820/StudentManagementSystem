@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping(value = "/api/students")
 public class StudentController {
@@ -27,5 +30,27 @@ public class StudentController {
     public ResponseEntity updateStudent(@PathVariable("id") long id, @RequestBody StudentPayload studentPayload){
         studentService.updateStudent(id, studentPayload);
         return ResponseEntity.status(HttpStatus.OK.value()).body(new CommonResponse("Student update successfully", HttpStatus.OK.value()));
+    }
+
+    @GetMapping(path = "list")
+    public ResponseEntity getAllStudents(){
+        List<Students> students = studentService.getAllStudents();
+        return ResponseEntity.status(HttpStatus.OK.value()).body(students);
+    }
+
+    @GetMapping(path = "{id}")
+    public ResponseEntity getStudent(@PathVariable long id){
+        Optional<Students> student = studentService.getStudentById(id);
+        if (student.isPresent()) {
+            return new ResponseEntity<>(student.get(), HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("student not foumd with id " + id);
+        }
+    }
+
+    @DeleteMapping(path = "{id}")
+    public ResponseEntity DeleteStudent(@PathVariable long id){
+        studentService.deleteStudent(id);
+        return ResponseEntity.status(HttpStatus.OK.value()).body(new CommonResponse("Student deleted successfully", HttpStatus.OK.value()));
     }
 }
