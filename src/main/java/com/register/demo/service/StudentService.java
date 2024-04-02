@@ -6,6 +6,8 @@ import com.register.demo.entity.Students;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class StudentService {
 
@@ -22,5 +24,21 @@ public class StudentService {
         students.setStatus(studentPayload.getStatus());
 
        studentRepository.save(students);
+    }
+
+    public void updateStudent(long id, StudentPayload studentPayload) {
+        Optional<Students> optionalStudents = studentRepository.findById(id);
+        if (optionalStudents.isPresent()){
+            Students students = optionalStudents.get();
+            students.setRollNo(studentPayload.getRollNo());
+            students.setFirstName(studentPayload.getFirstName());
+            students.setLastName(studentPayload.getLastName());
+            students.setDateOfBirth(studentPayload.getDateOfBirth());
+            students.setGender(studentPayload.getGender());
+            students.setStatus(studentPayload.getStatus());
+            studentRepository.save(students);
+        } else {
+            throw new IllegalArgumentException("student with id " + id + "not found");
+        }
     }
 }
